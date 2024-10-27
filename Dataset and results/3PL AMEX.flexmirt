@@ -1,0 +1,31 @@
+<Project>
+Title = "AMEX"; 
+Description = "3PL"; 
+<Options>
+  Mode = Calibration;
+  Quadrature = 17, 4.0; //17 quadrature points from -4 to 4, at intervals of .5;
+  savePRM = Yes; 
+  SaveSco=Yes; //save scores  (theta estimates);
+  Score=EAP;
+  SE = XPD; //estimate standard errors by cross-products;
+  Processors=4; //if you dont specify, flexmirt will only use 1 processor;
+  GOF=Complete; 
+  saveInf = Yes; //This will save the information function, but only at θ = 0 if you don’t add the next line
+  FisherInf = 1001, 4.0;  //Evaluate the information function at 31 quadrature points from – 3 to 3
+
+
+<Groups>
+// define your groups and group names
+%Group1%
+ File = "amex1920.dat";
+ Varnames = ID, I1-I40; //variables must have spaces between them in the data file;
+ Select = I1-I40;
+ N = 1708;
+ Missing = 9; //missing data code, must be letter or number, not dot or blank;
+ NCATS(I1-I40)=2; //2 categories, 0 or 1, because I have scored the data;
+ Model(I1-I40)=ThreePL; //for 2PL or 1PL, use Graded because they are special cases of the graded response model;
+ EmpHist=Yes; //estimate the shape of the theta distribution, instead of assuming normal;
+
+<Constraints> 
+Prior (I1-I40), Slope: Normal(1.5,0.5); //in logistic metric, so .88 in normal metric
+Prior (I1-I40), Guessing: Beta(16,86); //mean of .15

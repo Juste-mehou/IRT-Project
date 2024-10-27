@@ -1,0 +1,29 @@
+<Project>
+Title = "Global Experience"; 
+Description = "1PL"; 
+<Options>
+  Mode = Calibration;
+  Quadrature = 17, 4.0; //17 quadrature points from -4 to 4, at intervals of .5;
+  savePRM = Yes; 
+  SaveSco=Yes; //save scores  (theta estimates);
+  Score=EAP; 
+  SE = XPD; //estimate standard errors by cross-products;
+  Processors=4;
+  GOF=Complete; 
+
+<Groups>
+// define your groups and group names
+%Group1%
+ File = "amex1920.dat";
+ Varnames = ID, I1-I40; //variables must have spaces between them in the data file;
+ Select = I1-I40;
+ N = 1708;
+ Missing = 9; //missing data code, must be letter or number, not dot or blank;
+ NCATS(I1-I40)=2; //2 categories, 0 or 1, because I have scored the data;
+ Model(I1-I40)=ThreePL; //for 2PL or 1PL, use Graded because they are special cases of the graded response model;
+ EmpHist=Yes; //estimate the shape of the theta distribution, instead of assuming normal;
+
+<Constraints> 
+Equal (I1-I40), Slope; //set Is all slopes equal
+Fix (I1-I40), Guessing; 
+Value (I1-I40), Guessing, -999; //sets the logit of the lower asymptote to -999, which effectively sets the lower asymptote to zero.
